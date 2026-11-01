@@ -1,6 +1,6 @@
 {
   "name": "gemini",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Claude delegiert Recherche, Tiefenrecherche mit Gegenprüfung, Design-Entwürfe und Zweitmeinungen an Gemini – über die Google Antigravity CLI (agy) und dein Google-AI-Abo. Robust gegen bekannte agy-Fehler (#76, Auth-Timeout, Windows Defender), Aufrufe laufen isoliert und nacheinander.",
   "author": { "name": "BlackWolfDesign" },
   "license": "MIT",

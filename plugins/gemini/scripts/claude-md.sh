@@ -20,6 +20,39 @@ ENDE="<!-- gemini-bridge:end -->"
 
 die() { echo "FEHLER: $*" >&2; exit 2; }
 
+# ---------------------------------------------------------------------------
+# setup <wunsch> – wird von /gemini:setup aufgerufen; <wunsch> ist die Eingabe
+# des Nutzers (leer, projekt, global, beide, ohne, entfernen).
+# Leer = automatisch: vorhandenen Baustein aktualisieren, sonst ins Projekt.
+# ---------------------------------------------------------------------------
+if [ "$AKTION" = setup ]; then
+  SELF="${BASH_SOURCE[0]}"
+  W=$(printf '%s' "$ZIEL" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')
+  [ "$W" = '$arguments' ] && W=""   # Platzhalter nicht ersetzt = keine Eingabe
+  echo "CLAUDE.md-Ordner (aktuelles Projekt): $PWD"
+  ist_home() { [ "$(cd "$PWD" && pwd -P)" = "$(cd "$HOME" && pwd -P)" ] || [ "$PWD" = / ]; }
+  case "$W" in
+    ohne)      echo "CLAUDE.md: übersprungen (auf Wunsch)"; exit 0 ;;
+    entfernen) bash "$SELF" remove projekt; bash "$SELF" remove global; exit 0 ;;
+    global)    bash "$SELF" install global; exit $? ;;
+    beide)     ist_home || bash "$SELF" install projekt; bash "$SELF" install global; exit $? ;;
+    projekt)   ist_home && die "Der aktuelle Ordner ist dein Benutzerordner, kein Projekt. Öffne Claude Code im Projektordner oder nutze /gemini:setup global."
+               bash "$SELF" install projekt; exit $? ;;
+    "")
+      if grep -qs "^$START" "$PWD/CLAUDE.md"; then bash "$SELF" install projekt
+      elif grep -qs "^$START" "$HOME/.claude/CLAUDE.md"; then
+        bash "$SELF" install global
+        echo "HINWEIS: Regeln gelten bereits global für alle Projekte – im Projekt nichts eingetragen. Nur fürs Projekt: /gemini:setup projekt"
+      elif ist_home; then
+        echo "HINWEIS: Kein Projektordner geöffnet (aktueller Ordner = Benutzerordner). Nichts eingetragen. Für alle Projekte: /gemini:setup global"
+      else bash "$SELF" install projekt
+        echo "HINWEIS: Für alle Projekte statt nur dieses: /gemini:setup global"
+      fi
+      exit $? ;;
+    *) die "Unbekannte Eingabe '$ZIEL'. Erlaubt: projekt | global | beide | ohne | entfernen" ;;
+  esac
+fi
+
 case "$ZIEL" in
   projekt) DATEI="$PWD/CLAUDE.md" ;;
   global)  DATEI="$HOME/.claude/CLAUDE.md" ;;
