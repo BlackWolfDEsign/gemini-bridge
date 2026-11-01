@@ -1,0 +1,17 @@
+{
+  "name": "gemini-bridge",
+  "owner": { "name": "estoebe" },
+  "metadata": {
+    "description": "Gemini (Google Antigravity CLI) als Recherche- und Design-Partner für Claude Code – auf Deutsch.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "gemini",
+      "source": "./plugins/gemini",
+      "description": "Claude delegiert Recherche, Tiefenrecherche, Design-Entwürfe und Zweitmeinungen an Gemini über dein Google-Abo (agy).",
+      "version": "1.0.0",
+      "license": "MIT"
+    }
+  ]
+}
