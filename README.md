@@ -13,7 +13,7 @@ Claude plant, bewertet und kennt dein Projekt. Gemini durchsucht das Web. Das Er
 | `/gemini:tiefenrecherche [--tiefe L\|H] [--ja] <frage>` | Mehrere Blickwinkel, mehrere Runden, Red-Team-Gegenprüfung, Bericht mit Empfehlung fürs Projekt | 15–60 min |
 | `/gemini:design [--url <adresse>] [--mit-projekt] <auftrag>` | 2–3 echte Design-Varianten (UI, Architektur, Datenmodell, API) mit Vergleich | ~5–9 min |
 | `/gemini:zweitmeinung <plan>` | Gemini prüft einen Plan oder eine Entscheidung kritisch | ~3–6 min |
-| `/gemini:setup` | Prüft, ob alles läuft | <2 min |
+| `/gemini:setup [projekt\|global\|beide]` | Prüft, ob alles läuft, und trägt die Arbeitsregeln in die CLAUDE.md ein | <2 min |
 
 **Claude nutzt sie auch selbstständig:** Alle Befehle sind Skills. Claude ruft `frage`, `recherche` (niedrig/mittel), `design` und `zweitmeinung` von sich aus auf, wenn es passt. Für `tiefenrecherche` und Recherche mit Intensität `hoch` zeigt Claude vorher immer einen Plan bzw. fragt nach.
 
@@ -63,7 +63,7 @@ Claude Code beenden und neu starten (oder `/reload-plugins`), dann:
 /gemini:setup
 ```
 
-Erwartet: `PING OK`. Danach stehen alle `/gemini:…`-Befehle zur Verfügung.
+Erwartet: `PING OK`. Anschließend fragt Setup, ob die Arbeitsregeln in die `CLAUDE.md` eingetragen werden sollen (siehe „Damit Claude von selbst delegiert“). Danach stehen alle `/gemini:…`-Befehle zur Verfügung.
 
 ### Schritt 4 (empfohlen) – Windows Defender ausnehmen
 
@@ -123,7 +123,18 @@ Danach wie unter Windows ab Schritt 2.
 
 ## Damit Claude von selbst delegiert
 
-Füge den Inhalt von `vorlagen/CLAUDE-gemini.md` in die `CLAUDE.md` deiner Projekte ein (oder in `~/.claude/CLAUDE.md` für alle Projekte). Dort legst du fest, **wann** Claude Gemini fragen soll und wie viel.
+`/gemini:setup` fragt nach dem Verbindungstest, ob die **Arbeitsregeln** in die `CLAUDE.md` eingetragen werden sollen – für **dieses Projekt**, für **alle Projekte** (`~/.claude/CLAUDE.md`) oder beides. Die Regeln legen fest, wann Claude welchen Gemini-Befehl selbstständig einsetzt: Code-Verifizierung, Informations-Validierung, Abgleich mit der Realität, vollständige Logik, wissenschaftliche Kennzeichnung ([Beleg] / [Schlussfolgerung] / [Annahme]).
+
+Direkt ohne Rückfrage:
+
+```
+/gemini:setup projekt     nur dieses Projekt
+/gemini:setup global      alle Projekte
+/gemini:setup beide
+/gemini:setup entfernen   Regeln wieder herausnehmen
+```
+
+Der Baustein steht in Markierungen (`<!-- gemini-bridge:start … -->` … `<!-- gemini-bridge:end -->`). Eigener Inhalt der CLAUDE.md bleibt unangetastet, ein erneutes Setup aktualisiert den Baustein statt ihn zu verdoppeln, und vor jeder Änderung entsteht eine Sicherung `CLAUDE.md.bak-gemini`. Die Regeln gelten ab der nächsten Sitzung. Anpassen: `plugins/gemini/vorlagen/CLAUDE-gemini.md` bearbeiten, dann erneut `/gemini:setup`.
 
 ## Was das Plugin für dich abfängt
 
