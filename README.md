@@ -19,22 +19,107 @@ Claude plant, bewertet und kennt dein Projekt. Gemini durchsucht das Web. Das Er
 
 ## Installation (Windows)
 
-Voraussetzungen: Claude Code mit Git for Windows (Standard), Antigravity CLI installiert und einmal per `agy` mit deinem Google-Konto angemeldet.
+### Voraussetzungen
 
-1. ZIP entpacken, z. B. nach `C:\Users\<name>\claude-plugins\gemini-bridge`
-2. In Claude Code:
-   ```
-   /plugin marketplace add C:/Users/<name>/claude-plugins/gemini-bridge
-   /plugin install gemini@gemini-bridge
-   ```
-   Pfad mit normalen Schrägstrichen `/` angeben.
-3. Claude Code neu starten (oder `/reload-plugins`), dann:
-   ```
-   /gemini:setup
-   ```
-   Erwartet: `PING OK`.
+| Was | Prüfen / Installieren |
+|---|---|
+| **Claude Code** | `claude --version` in PowerShell |
+| **Git for Windows** (bringt Git Bash mit, das Claude Code und dieses Plugin nutzen) | `git --version` – sonst von https://git-scm.com/download/win installieren |
+| **Google-AI-Abo** (Pro oder Ultra) | in deinem Google-Konto |
+| **Antigravity CLI (`agy`)** | siehe Schritt 1 |
 
-Alternativ in dein eigenes GitHub-Repo hochladen und `/plugin marketplace add <dein-name>/gemini-bridge` verwenden.
+### Schritt 1 – Antigravity CLI installieren und anmelden
+
+In **PowerShell** (nicht in Claude Code):
+
+```powershell
+irm https://antigravity.google/cli/install.ps1 | iex
+```
+
+Danach PowerShell **schließen und neu öffnen**, damit `agy` im PATH ist, und einmal starten:
+
+```powershell
+agy
+```
+
+Mit dem Google-Konto anmelden, das dein Abo hat. Wenn `agy` läuft, wieder beenden. Diese Anmeldung nutzt das Plugin im Hintergrund.
+
+### Schritt 2 – Plugin in Claude Code installieren
+
+Claude Code starten und **nacheinander** eingeben:
+
+```
+/plugin marketplace add BlackWolfDEsign/gemini-bridge
+/plugin install gemini@gemini-bridge
+```
+
+Wichtig: beim Installieren genau `gemini@gemini-bridge` schreiben – `gemini` ist der Name des Plugins, `gemini-bridge` der Name des Marketplace.
+
+### Schritt 3 – Neu starten und testen
+
+Claude Code beenden und neu starten (oder `/reload-plugins`), dann:
+
+```
+/gemini:setup
+```
+
+Erwartet: `PING OK`. Danach stehen alle `/gemini:…`-Befehle zur Verfügung.
+
+### Schritt 4 (empfohlen) – Windows Defender ausnehmen
+
+Defender sperrt gelegentlich Dateien, die `agy` gerade schreibt, wodurch Antworten abbrechen. Das Plugin versucht es dann automatisch erneut. Dauerhaft vermeiden lässt es sich in einer **PowerShell als Administrator**:
+
+```powershell
+Add-MpPreference -ExclusionPath "$env:USERPROFILE\.gemini\antigravity-cli\conversations"
+```
+
+### Aktualisieren
+
+Wenn im Repo etwas geändert wurde:
+
+```
+/plugin marketplace update gemini-bridge
+```
+
+Danach Claude Code neu starten.
+
+### Deinstallieren
+
+```
+/plugin uninstall gemini@gemini-bridge
+/plugin marketplace remove gemini-bridge
+```
+
+### Probleme bei der Installation
+
+| Meldung / Problem | Lösung |
+|---|---|
+| **Plugin „gemini“ konnte nicht gefunden werden** | Der Marketplace fehlt oder ist veraltet (z. B. weil das Repo beim ersten Versuch noch privat war). Neu hinzufügen: `/plugin marketplace remove gemini-bridge`, dann `/plugin marketplace add BlackWolfDEsign/gemini-bridge`, dann `/plugin install gemini@gemini-bridge`. Außerdem prüfen, dass du `gemini@gemini-bridge` und nicht nur `gemini` eingegeben hast. |
+| `marketplace add` schlägt fehl | Repo-Name genau so schreiben: `BlackWolfDEsign/gemini-bridge`. Prüfen, ob `git --version` funktioniert und GitHub erreichbar ist. |
+| `/gemini:setup` meldet **agy nicht gefunden** | PowerShell und Claude Code neu starten. Hilft das nicht, Pfad fest eintragen: in `%USERPROFILE%\.claude\settings.json` unter `"env"` den Eintrag `"AGY_BIN": "C:/Users/<name>/AppData/Local/agy/bin/agy.exe"` ergänzen (normale Schrägstriche). |
+| `/gemini:setup` meldet **Anmeldung abgelaufen** | In einer normalen PowerShell einmal `agy` starten, anmelden, beenden. Dann erneut `/gemini:setup`. |
+| **Keine Antwort** / Zeitüberschreitung | Läuft gleichzeitig ein `agy` in einem anderen Fenster? Schließen. Details im Diagnose-Log `%USERPROFILE%\.claude\gemini-bridge\letzter-lauf.log`. |
+| Befehle `/gemini:…` erscheinen nicht | `/plugin` öffnen und prüfen, ob `gemini@gemini-bridge` aktiviert ist. Claude Code neu starten. |
+
+### Alternative: Installation ohne GitHub (lokaler Ordner)
+
+Repo als ZIP herunterladen (grüner Button **Code → Download ZIP**), z. B. nach `C:\Users\<name>\claude-plugins\gemini-bridge` entpacken – der Ordner muss direkt `.claude-plugin`, `plugins` und `README.md` enthalten. Dann:
+
+```
+/plugin marketplace add C:/Users/<name>/claude-plugins/gemini-bridge
+/plugin install gemini@gemini-bridge
+```
+
+Pfad mit normalen Schrägstrichen `/` angeben.
+
+## Installation (macOS / Linux)
+
+```bash
+curl -fsSL https://antigravity.google/cli/install.sh | bash
+agy   # einmal anmelden, dann beenden
+```
+
+Danach wie unter Windows ab Schritt 2.
 
 ## Damit Claude von selbst delegiert
 
