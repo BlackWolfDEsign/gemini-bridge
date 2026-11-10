@@ -1,8 +1,8 @@
 {
   "name": "gemini",
-  "version": "1.0.3",
-  "description": "Claude delegiert Recherche, Tiefenrecherche mit Gegenprüfung, Design-Entwürfe und Zweitmeinungen an Gemini – über die Google Antigravity CLI (agy) und dein Google-AI-Abo. Robust gegen bekannte agy-Fehler (#76, Auth-Timeout, Windows Defender), Aufrufe laufen isoliert und nacheinander.",
+  "version": "1.1.0",
+  "description": "Claude delegiert Recherche, Tiefenrecherche mit Gegenprüfung, Design-Entwürfe und Zweitmeinungen an Gemini – über die Google Antigravity CLI (agy) und dein Google-AI-Abo. Robust gegen bekannte agy-Fehler (#76, Auth-Timeout, Windows Defender), Aufrufe laufen isoliert und nacheinander. Auf Wunsch bedient /gemini:app die Gemini-App über Claude in Chrome (Deep Research, Export ohne Kopieren von Hand).",
   "author": { "name": "BlackWolfDesign" },
   "license": "MIT",
-  "keywords": ["gemini", "antigravity", "agy", "recherche", "deep-research", "design", "deutsch"]
+  "keywords": ["gemini", "antigravity", "agy", "recherche", "deep-research", "design", "deutsch", "gemini-app"]
 }

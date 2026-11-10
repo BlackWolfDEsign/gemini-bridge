@@ -14,8 +14,9 @@ Claude plant, bewertet und kennt dein Projekt. Gemini durchsucht das Web. Das Er
 | `/gemini:design [--url <adresse>] [--mit-projekt] <auftrag>` | 2–3 echte Design-Varianten (UI, Architektur, Datenmodell, API) mit Vergleich | ~5–9 min |
 | `/gemini:zweitmeinung <plan>` | Gemini prüft einen Plan oder eine Entscheidung kritisch | ~3–6 min |
 | `/gemini:setup [projekt\|global\|beide]` | Prüft, ob alles läuft, und trägt die Arbeitsregeln in die CLAUDE.md ein | <2 min |
+| `/gemini:app [--modus deep-research\|chat] <frage>` | Bedient die **Gemini-App** in deinem Chrome (Claude in Chrome): Deep Research oder Chat starten, Bericht selbst exportieren und ablegen | 15–60 min |
 
-**Claude nutzt sie auch selbstständig:** Alle Befehle sind Skills. Claude ruft `frage`, `recherche` (niedrig/mittel), `design` und `zweitmeinung` von sich aus auf, wenn es passt. Für `tiefenrecherche` und Recherche mit Intensität `hoch` zeigt Claude vorher immer einen Plan bzw. fragt nach.
+**Claude nutzt sie auch selbstständig:** Alle Befehle sind Skills. Claude ruft `frage`, `recherche` (niedrig/mittel), `design` und `zweitmeinung` von sich aus auf, wenn es passt. Für `tiefenrecherche` und Recherche mit Intensität `hoch` zeigt Claude vorher immer einen Plan bzw. fragt nach. `/gemini:app` läuft nur auf deinen ausdrücklichen Wunsch.
 
 ## Installation (Windows)
 
@@ -151,6 +152,12 @@ Alle Aufrufe laufen über `plugins/gemini/scripts/agy-run.sh`:
   ```
 
 Diagnose des letzten Laufs: `~/.claude/gemini-bridge/letzter-lauf.log`
+
+## Gemini-App statt CLI (`/gemini:app`)
+
+Für Deep Research in der Gemini-App (gemini.google.com) braucht es kein agy, sondern die Erweiterung **Claude in Chrome**, verbunden mit Claude Code, und eine Anmeldung bei Gemini in diesem Chrome. Claude stellt das stärkste Modell mit Denkaufwand „Hoch“ ein (nie Flash), schaltet Deep Research ein oder aus, tippt den Prompt, klickt „Recherche starten“, wartet und exportiert den fertigen Bericht über Geminis eigenen Export („Teilen und exportieren → Inhalte kopieren“, bei Chats „Kopieren“). Die Zwischenablage liest `scripts/app-zwischenablage.sh` (Windows über PowerShell, macOS über `osascript`/`pbpaste`, Linux über `wl-paste` oder `xclip`), `scripts/app-html2md.py` wandelt das HTML in Markdown um (nur Python-Standardbibliothek). Das Ergebnis liegt mit Herkunftskopf (Modell, Chat, Zeitstempel, „ungeprüft“) unter `docs/gemini/app/`, die Rohdaten unter `docs/gemini/app/.roh/` (nicht committen). Hängt ein Lauf über die Frist von 65 Minuten, sichert Claude die Quellenliste und stoppt ihn; Chats werden nie gelöscht.
+
+Aus dem Praxistest (November 2026): Viele Deep-Research-Läufe bleiben bei „Rechercheplan wird erstellt“ oder „Bericht wird erstellt“ hängen; ein neuer Versuch in einem neuen Chat hilft öfter als das Teilen der Frage. Ein normaler Chat geht verloren, wenn der Tab vor der fertigen Antwort neu geladen wird oder einen anderen Chat öffnet. Der Export überschreibt die Zwischenablage.
 
 ## Anpassen
 
